@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,14 +12,14 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -27,41 +28,44 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #2196F3, #21CBF3);
             color: white;
             padding: 30px;
             text-align: center;
         }
-        
+
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
-        
+
         .status {
             padding: 20px;
             background: #f8f9fa;
             border-bottom: 1px solid #dee2e6;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
         }
-        
+
         .status-item {
             display: inline-block;
-            margin-right: 30px;
             padding: 10px 15px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         .main-content {
             display: grid;
             grid-template-columns: 1fr 2fr;
             gap: 30px;
             padding: 30px;
         }
-        
+
         .form-section {
             background: white;
             padding: 30px;
@@ -69,25 +73,27 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             height: fit-content;
         }
-        
+
         .form-section h2 {
             color: #333;
             margin-bottom: 20px;
             font-size: 1.5rem;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
             color: #555;
             font-weight: 500;
         }
-        
-        .form-group input, .form-group textarea, .form-group select {
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #e9ecef;
@@ -95,12 +101,14 @@
             font-size: 16px;
             transition: border-color 0.3s;
         }
-        
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: #2196F3;
         }
-        
+
         .btn {
             background: linear-gradient(135deg, #2196F3, #21CBF3);
             color: white;
@@ -113,41 +121,42 @@
             transition: transform 0.2s, box-shadow 0.2s;
             width: 100%;
         }
-        
+
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(33, 150, 243, 0.3);
         }
-        
+
         .btn:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
-        
+
         .items-section {
             background: white;
             border-radius: 15px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
             overflow: hidden;
         }
-        
+
         .items-header {
             background: #f8f9fa;
             padding: 20px 30px;
             border-bottom: 1px solid #dee2e6;
         }
-        
+
         .items-header h2 {
             color: #333;
             font-size: 1.5rem;
         }
-        
+
         .search-box {
             margin-top: 15px;
             position: relative;
         }
-        
+
         .search-box input {
             width: 100%;
             padding: 12px 15px;
@@ -155,121 +164,133 @@
             border-radius: 10px;
             font-size: 16px;
         }
-        
+
         .items-list {
             max-height: 600px;
             overflow-y: auto;
             padding: 20px;
         }
-        
+
         .item-card {
-            background: #f8f9fa;
+            background: #fdfdff;
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 15px;
             transition: transform 0.2s, box-shadow 0.2s;
             border-left: 4px solid #2196F3;
         }
-        
+
         .item-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         }
-        
+
         .item-header {
             display: flex;
             justify-content: space-between;
             align-items: start;
             margin-bottom: 10px;
         }
-        
+
         .item-name {
             font-size: 1.2rem;
             font-weight: 600;
             color: #333;
         }
-        
+
         .item-id {
             background: #2196F3;
             color: white;
             padding: 4px 8px;
             border-radius: 5px;
             font-size: 0.8rem;
+            font-weight: 500;
         }
-        
+
         .item-details {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
             margin-top: 15px;
         }
-        
+
         .item-detail {
             text-align: center;
             padding: 10px;
             background: white;
             border-radius: 8px;
+            border: 1px solid #e9ecef;
         }
-        
+
         .item-detail-label {
             font-size: 0.8rem;
             color: #666;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
+
         .item-detail-value {
             font-size: 1.1rem;
             font-weight: 600;
             color: #333;
             margin-top: 5px;
+            word-wrap: break-word;
         }
-        
-        .loading {
+
+        .loading,
+        .no-items {
             text-align: center;
             padding: 40px;
             color: #666;
+            font-size: 1.1rem;
         }
-        
+
+        #messages div {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
         .error {
             background: #ff5722;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
         }
-        
+
         .success {
             background: #4caf50;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
         }
-        
-        @media (max-width: 768px) {
+
+        @media (max-width: 992px) {
             .main-content {
                 grid-template-columns: 1fr;
             }
-            
+        }
+
+        @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
             }
-            
+
+            .status {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
             .status-item {
-                display: block;
-                margin: 10px 0;
+                margin: 5px 0;
+                text-align: center;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <h1>🏪 Blockchain Inventory</h1>
             <p>Decentralized Warehouse Management System</p>
         </div>
-        
+
         <div class="status">
             <div class="status-item">
                 <strong>Network:</strong> <span id="network">Connecting...</span>
@@ -281,19 +302,17 @@
                 <strong>Total Items:</strong> <span id="totalItems">0</span>
             </div>
         </div>
-        
+
         <div class="main-content">
             <div class="form-section">
                 <h2>📦 Add New Item</h2>
-                
                 <div id="messages"></div>
-                
                 <form id="addItemForm">
                     <div class="form-group">
                         <label for="itemName">Item Name</label>
-                        <input type="text" id="itemName" required placeholder="Enter item name">
+                        <input type="text" id="itemName" required placeholder="e.g., MacBook Pro 16-inch">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="itemCategory">Category</label>
                         <select id="itemCategory" required>
@@ -306,36 +325,36 @@
                             <option value="Other">Other</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="itemQuantity">Quantity</label>
-                        <input type="number" id="itemQuantity" required min="1" placeholder="Enter quantity">
+                        <input type="number" id="itemQuantity" required min="1" placeholder="e.g., 10">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="itemPrice">Price (ETH)</label>
-                        <input type="number" id="itemPrice" step="0.001" placeholder="0.001" required>
+                        <input type="number" id="itemPrice" step="0.001" min="0" placeholder="e.g., 1.5" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="itemDescription">Description</label>
-                        <textarea id="itemDescription" rows="3" placeholder="Item description (optional)"></textarea>
+                        <textarea id="itemDescription" rows="3" placeholder="Item details (optional)"></textarea>
                     </div>
-                    
+
                     <button type="submit" class="btn" id="addItemBtn">
                         Add Item to Blockchain
                     </button>
                 </form>
             </div>
-            
+
             <div class="items-section">
                 <div class="items-header">
                     <h2>📋 Inventory Items</h2>
                     <div class="search-box">
-                        <input type="text" id="searchItems" placeholder="🔍 Search items...">
+                        <input type="text" id="searchItems" placeholder="🔍 Search by name or category...">
                     </div>
                 </div>
-                
+
                 <div class="items-list" id="itemsList">
                     <div class="loading">Loading items from blockchain...</div>
                 </div>
@@ -344,41 +363,329 @@
     </div>
 
     <script>
-        // ⚠️ GANTI DENGAN SETTING ANDA
-        const INFURA_API_KEY = 'https://gas.api.infura.io/v3/a44371e8ff03474aa0540f52b809fdd4';
+        // =================================================================
+        //                 KONFIGURASI APLIKASI
+        // =================================================================
+
+        // ⚠️ GANTI DENGAN API KEY INFURA ANDA. HANYA KEY-NYA SAJA.
+        // ** CONTOH: 'a44371e8ff03474aa0540f52b809fdd4'
+        const INFURA_API_KEY = 'a44371e8ff03474aa0540f52b809fdd4';
+
+        // ⚠️ GANTI DENGAN ALAMAT KONTRAK ANDA SETELAH DEPLOY KE SEPOLIA
+        // ** CONTOH: '0x1234567890AbcdEf1234567890AbcdEf12345678'
+        const CONTRACT_ADDRESS = '0xff02bb72a821c1b37f3eb3e1ffa0ac80f6e6aae5';
+
+        // =================================================================
+
+        // URL RPC untuk koneksi read-only
         const RPC_URL = `https://sepolia.infura.io/v3/${INFURA_API_KEY}`;
-        
-        // ⚠️ GANTI DENGAN CONTRACT ADDRESS DARI REMIX
-        const CONTRACT_ADDRESS = '0xd9145CCE52D386f254917e481eB44e9943F39138';
-        
-        // Contract ABI - Copy dari Remix setelah compile
+
+        // Contract ABI - Salin dari Remix setelah compile
         const CONTRACT_ABI = [
             {
                 "inputs": [
-                    {"internalType": "string", "name": "_name", "type": "string"},
-                    {"internalType": "string", "name": "_category", "type": "string"},
-                    {"internalType": "uint256", "name": "_quantity", "type": "uint256"},
-                    {"internalType": "uint256", "name": "_priceInWei", "type": "uint256"},
-                    {"internalType": "string", "name": "_description", "type": "string"}
+                    {
+                        "internalType": "string",
+                        "name": "_name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "_category",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_quantity",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_priceInWei",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "_description",
+                        "type": "string"
+                    }
                 ],
                 "name": "addItem",
-                "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
-                "inputs": [{"internalType": "uint256", "name": "_itemId", "type": "uint256"}],
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_itemId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "deactivateItem",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "uint256",
+                        "name": "itemId",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "category",
+                        "type": "string"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "quantity",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "price",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    }
+                ],
+                "name": "ItemAdded",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "uint256",
+                        "name": "itemId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "ItemDeactivated",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "uint256",
+                        "name": "itemId",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "newQuantity",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "newPrice",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "ItemUpdated",
+                "type": "event"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_itemId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_newQuantity",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_newPrice",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "updateItem",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getAllActiveItems",
+                "outputs": [
+                    {
+                        "internalType": "uint256[]",
+                        "name": "ids",
+                        "type": "uint256[]"
+                    },
+                    {
+                        "internalType": "string[]",
+                        "name": "names",
+                        "type": "string[]"
+                    },
+                    {
+                        "internalType": "string[]",
+                        "name": "categories",
+                        "type": "string[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "quantities",
+                        "type": "uint256[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "prices",
+                        "type": "uint256[]"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_itemId",
+                        "type": "uint256"
+                    }
+                ],
                 "name": "getItem",
                 "outputs": [
-                    {"internalType": "uint256", "name": "id", "type": "uint256"},
-                    {"internalType": "string", "name": "name", "type": "string"},
-                    {"internalType": "string", "name": "category", "type": "string"},
-                    {"internalType": "uint256", "name": "quantity", "type": "uint256"},
-                    {"internalType": "uint256", "name": "priceInWei", "type": "uint256"},
-                    {"internalType": "string", "name": "description", "type": "string"},
-                    {"internalType": "address", "name": "owner", "type": "address"},
-                    {"internalType": "uint256", "name": "timestamp", "type": "uint256"},
-                    {"internalType": "bool", "name": "isActive", "type": "bool"}
+                    {
+                        "internalType": "uint256",
+                        "name": "id",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "category",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "quantity",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "priceInWei",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "description",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isActive",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_owner",
+                        "type": "address"
+                    }
+                ],
+                "name": "getItemsByOwner",
+                "outputs": [
+                    {
+                        "internalType": "uint256[]",
+                        "name": "",
+                        "type": "uint256[]"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getStats",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "totalItems",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "activeItems",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "totalValue",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "contractOwner",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getTotalInventoryValue",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
                 ],
                 "stateMutability": "view",
                 "type": "function"
@@ -386,153 +693,194 @@
             {
                 "inputs": [],
                 "name": "itemCount",
-                "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
                 "stateMutability": "view",
                 "type": "function"
             },
             {
-                "inputs": [],
-                "name": "getAllActiveItems",
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "items",
                 "outputs": [
-                    {"internalType": "uint256[]", "name": "ids", "type": "uint256[]"},
-                    {"internalType": "string[]", "name": "names", "type": "string[]"},
-                    {"internalType": "string[]", "name": "categories", "type": "string[]"},
-                    {"internalType": "uint256[]", "name": "quantities", "type": "uint256[]"},
-                    {"internalType": "uint256[]", "name": "prices", "type": "uint256[]"}
+                    {
+                        "internalType": "uint256",
+                        "name": "id",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "category",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "quantity",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "priceInWei",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "description",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isActive",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "ownerItems",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_searchTerm",
+                        "type": "string"
+                    }
+                ],
+                "name": "searchItemsByName",
+                "outputs": [
+                    {
+                        "internalType": "uint256[]",
+                        "name": "",
+                        "type": "uint256[]"
+                    }
                 ],
                 "stateMutability": "view",
                 "type": "function"
             }
         ];
-        
-        // Bisa juga pakai public RPC (tanpa API key)
-        // const RPC_URL = 'https://rpc.ankr.com/eth_sepolia';
-        
+
         let provider;
-        let items = [];
-        let itemCounter = 0;
-        
-        // Simulate blockchain data (karena kita belum deploy smart contract)
-        // Nanti bisa diganti dengan real contract calls
-        let blockchainItems = [
-            {
-                id: 1,
-                name: "MacBook Pro",
-                category: "Electronics", 
-                quantity: 5,
-                price: "1.5",
-                description: "Latest MacBook Pro 16-inch",
-                timestamp: Date.now() - 86400000,
-                txHash: "0x1234...abcd"
-            },
-            {
-                id: 2,
-                name: "Nike Air Jordan",
-                category: "Clothing",
-                quantity: 12,
-                price: "0.3",
-                description: "Original Nike Air Jordan shoes",
-                timestamp: Date.now() - 172800000,
-                txHash: "0x5678...efgh"
-            }
-        ];
-        
-        // Initialize app
+        let contract;
+        let items = []; // Cache lokal untuk data item
+
+        // Inisialisasi Aplikasi
         async function initApp() {
             try {
-                // Connect to Ethereum network
+                if (INFURA_API_KEY === 'https://gas.api.infura.io/v3/a44371e8ff03474aa0540f52b809fdd4' || !INFURA_API_KEY) {
+                    showMessage('Please configure your Infura API Key in the script.', 'error');
+                    document.getElementById('network').textContent = 'Configuration Error';
+                    return;
+                }
                 provider = new ethers.JsonRpcProvider(RPC_URL);
-                
-                // Get network info
                 const network = await provider.getNetwork();
-                document.getElementById('network').textContent = network.name || 'Sepolia';
-                
-                // Get latest block
-                const blockNumber = await provider.getBlockNumber();
-                document.getElementById('blockNumber').textContent = blockNumber;
-                
-                // Load items
+                document.getElementById('network').textContent = network.name;
+
+                provider.on('block', (blockNumber) => {
+                    document.getElementById('blockNumber').textContent = blockNumber;
+                });
+
                 loadItems();
-                
-                // Update block number every 30 seconds
-                setInterval(async () => {
-                    try {
-                        const newBlock = await provider.getBlockNumber();
-                        document.getElementById('blockNumber').textContent = newBlock;
-                    } catch (error) {
-                        console.log('Error updating block number:', error);
-                    }
-                }, 30000);
-                
+
             } catch (error) {
-                console.error('Failed to initialize:', error);
-                showMessage('Failed to connect to blockchain network', 'error');
+                console.error('Initialization failed:', error);
+                showMessage('Failed to connect to blockchain network. Check console and RPC config.', 'error');
                 document.getElementById('network').textContent = 'Connection Failed';
             }
         }
-        
-        // Load items from real blockchain
+
+        // Memuat Item dari Blockchain (Metode Optimal)
         async function loadItems() {
+            const itemsListEl = document.getElementById('itemsList');
+            itemsListEl.innerHTML = '<div class="loading">🔄 Loading items from blockchain...</div>';
+
             try {
-                if (!CONTRACT_ADDRESS || CONTRACT_ADDRESS === '0xd9145CCE52D386f254917e481eB44e9943F39138') {
-                    // Fallback to simulation if contract not deployed yet
-                    items = [...blockchainItems];
-                    itemCounter = Math.max(...items.map(item => item.id), 0);
-                    displayItems();
-                    updateTotalItems();
-                    return;
+                if (!CONTRACT_ADDRESS || CONTRACT_ADDRESS === '0xff02bb72a821c1b37f3eb3e1ffa0ac80f6e6aae5') {
+                    throw new Error('Please configure your smart contract address.');
                 }
-                
-                const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
-                const itemCount = await contract.itemCount();
-                
-                items = [];
-                for(let i = 1; i <= itemCount; i++) {
-                    try {
-                        const item = await contract.getItem(i);
-                        if (item.isActive) {
-                            items.push({
-                                id: item.id.toString(),
-                                name: item.name,
-                                category: item.category,
-                                quantity: item.quantity.toString(),
-                                price: ethers.formatEther(item.priceInWei),
-                                description: item.description,
-                                timestamp: Number(item.timestamp) * 1000,
-                                owner: item.owner,
-                                txHash: `Block: ${await provider.getBlockNumber()}`
-                            });
-                        }
-                    } catch (error) {
-                        console.log(`Error loading item ${i}:`, error);
-                    }
+                contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+                const allItemsData = await contract.getAllActiveItems();
+
+                const [ids, names, categories, quantities, prices] = allItemsData;
+
+                items = []; // Bersihkan cache sebelum mengisi ulang
+                for (let i = 0; i < ids.length; i++) {
+                    items.push({
+                        id: ids[i].toString(),
+                        name: names[i],
+                        category: categories[i],
+                        quantity: quantities[i].toString(),
+                        price: ethers.formatEther(prices[i]),
+                    });
                 }
-                
+
                 displayItems();
                 updateTotalItems();
-                
+
             } catch (error) {
-                console.error('Error loading items from blockchain:', error);
-                showMessage('Failed to load items from blockchain', 'error');
-                
-                // Fallback to simulation
-                items = [...blockchainItems];
-                displayItems();
-                updateTotalItems();
+                console.error('Error loading items:', error);
+                itemsListEl.innerHTML = `<div class="no-items">❌ Failed to load items. <br> ${error.message}</div>`;
             }
         }
-        
-        // Display items in UI
+
+        // Menampilkan Item di UI
         function displayItems(filteredItems = null) {
-            const itemsList = document.getElementById('itemsList');
+            const itemsListEl = document.getElementById('itemsList');
             const itemsToShow = filteredItems || items;
-            
+
             if (itemsToShow.length === 0) {
-                itemsList.innerHTML = '<div class="loading">No items found</div>';
+                itemsListEl.innerHTML = '<div class="no-items">📭 No items found in inventory.</div>';
                 return;
             }
-            
-            itemsList.innerHTML = itemsToShow.map(item => `
+
+            itemsListEl.innerHTML = itemsToShow.map(item => `
                 <div class="item-card">
                     <div class="item-header">
                         <div class="item-name">${item.name}</div>
@@ -551,218 +899,91 @@
                             <div class="item-detail-label">Price</div>
                             <div class="item-detail-value">${item.price} ETH</div>
                         </div>
-                        <div class="item-detail">
-                            <div class="item-detail-label">Added</div>
-                            <div class="item-detail-value">${new Date(item.timestamp).toLocaleDateString()}</div>
-                        </div>
-                    </div>
-                    ${item.description ? `<p style="margin-top: 15px; color: #666; font-style: italic;">${item.description}</p>` : ''}
-                    <div style="margin-top: 15px; font-size: 0.8rem; color: #999;">
-                        TX: ${item.txHash}
                     </div>
                 </div>
             `).join('');
         }
-        
-        // Add item to real blockchain
-        async function addItem(event) {
+
+        // Menambah Item ke Blockchain
+        async function handleAddItem(event) {
             event.preventDefault();
-            
+
+            if (typeof window.ethereum === 'undefined') {
+                showMessage('MetaMask is not installed! Please install it to add items.', 'error');
+                return;
+            }
+
             const addBtn = document.getElementById('addItemBtn');
             addBtn.disabled = true;
-            addBtn.textContent = 'Adding to Blockchain...';
-            
+            addBtn.textContent = 'Connecting to Wallet...';
+
             try {
-                const formData = {
-                    name: document.getElementById('itemName').value,
-                    category: document.getElementById('itemCategory').value,
-                    quantity: parseInt(document.getElementById('itemQuantity').value),
-                    price: document.getElementById('itemPrice').value,
-                    description: document.getElementById('itemDescription').value
-                };
-                
-                // Try real blockchain first
-                if (CONTRACT_ADDRESS && CONTRACT_ADDRESS !== '0xd9145CCE52D386f254917e481eB44e9943F39138') {
-                    await addItemToBlockchain(formData);
-                } else {
-                    // Fallback to simulation
-                    await simulateBlockchainTransaction(formData);
-                }
-                
-                // Clear form
+                const browserProvider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await browserProvider.getSigner();
+                const contractWithSigner = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+                const itemName = document.getElementById('itemName').value;
+                const itemCategory = document.getElementById('itemCategory').value;
+                const itemQuantity = document.getElementById('itemQuantity').value;
+                const itemPrice = document.getElementById('itemPrice').value;
+                const itemDescription = document.getElementById('itemDescription').value;
+
+                const priceInWei = ethers.parseEther(itemPrice);
+
+                addBtn.textContent = 'Confirm in Wallet...';
+
+                const tx = await contractWithSigner.addItem(
+                    itemName,
+                    itemCategory,
+                    itemQuantity,
+                    priceInWei,
+                    itemDescription
+                );
+
+                addBtn.textContent = 'Processing Transaction...';
+                showMessage('Transaction sent! Waiting for confirmation...', 'success');
+
+                await tx.wait(); // Tunggu transaksi selesai
+
+                showMessage('Item successfully added to the blockchain!', 'success');
                 document.getElementById('addItemForm').reset();
-                showMessage('Item successfully added to blockchain!', 'success');
-                
-                // Reload items
-                setTimeout(() => loadItems(), 2000);
-                
+                loadItems(); // Muat ulang daftar item
+
             } catch (error) {
                 console.error('Error adding item:', error);
-                showMessage('Failed to add item: ' + error.message, 'error');
+                showMessage(error.reason || error.message, 'error');
             } finally {
                 addBtn.disabled = false;
                 addBtn.textContent = 'Add Item to Blockchain';
             }
         }
-        
-        // Real blockchain function
-        async function addItemToBlockchain(itemData) {
-            // Check if MetaMask is available
-            if (!window.ethereum) {
-                throw new Error('MetaMask not found! Please install MetaMask.');
-            }
-            
-            // Request account access
-            await window.ethereum.request({method: 'eth_requestAccounts'});
-            
-            // Create provider and signer
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
-            
-            // Create contract instance with signer
-            const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-            
-            // Convert price to Wei
-            const priceInWei = ethers.parseEther(itemData.price.toString());
-            
-            // Call smart contract
-            const tx = await contract.addItem(
-                itemData.name,
-                itemData.category,
-                itemData.quantity,
-                priceInWei,
-                itemData.description
-            );
-            
-            // Wait for transaction confirmation
-            const receipt = await tx.wait();
-            
-            console.log('Transaction confirmed:', receipt.hash);
-            return receipt.hash;
-        }
-        
-        // Simulate blockchain transaction (replace with real smart contract call)
-        async function simulateBlockchainTransaction(itemData) {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    try {
-                        itemCounter++;
-                        const newItem = {
-                            id: itemCounter,
-                            ...itemData,
-                            timestamp: Date.now(),
-                            txHash: `0x${Math.random().toString(16).substr(2, 8)}...${Math.random().toString(16).substr(2, 4)}`
-                        };
-                        
-                        // Add to blockchain items
-                        blockchainItems.push(newItem);
-                        items.push(newItem);
-                        
-                        displayItems();
-                        updateTotalItems();
-                        
-                        resolve(newItem);
-                    } catch (error) {
-                        reject(error);
-                    }
-                }, 2000); // Simulate 2 second transaction time
-            });
-        }
-        
-        // Update total items counter
+
         function updateTotalItems() {
             document.getElementById('totalItems').textContent = items.length;
         }
-        
-        // Show message
+
         function showMessage(message, type) {
             const messagesDiv = document.getElementById('messages');
-            const messageElement = document.createElement('div');
-            messageElement.className = type;
-            messageElement.textContent = message;
-            
-            messagesDiv.innerHTML = '';
-            messagesDiv.appendChild(messageElement);
-            
+            messagesDiv.innerHTML = `<div class="${type}">${message}</div>`;
             setTimeout(() => {
-                messageElement.remove();
+                messagesDiv.innerHTML = '';
             }, 5000);
         }
-        
-        // Search functionality
-        function searchItems(searchTerm) {
-            if (!searchTerm) {
-                displayItems();
-                return;
-            }
-            
-            const filtered = items.filter(item => 
-                item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                item.description.toLowerCase().includes(searchTerm.toLowerCase())
+
+        function handleSearch(event) {
+            const searchTerm = event.target.value.toLowerCase();
+            const filtered = items.filter(item =>
+                item.name.toLowerCase().includes(searchTerm) ||
+                item.category.toLowerCase().includes(searchTerm)
             );
-            
             displayItems(filtered);
         }
-        
-        // Event listeners
+
+        // Event Listeners
         document.addEventListener('DOMContentLoaded', initApp);
-        document.getElementById('addItemForm').addEventListener('submit', addItem);
-        document.getElementById('searchItems').addEventListener('input', (e) => {
-            searchItems(e.target.value);
-        });
-        
-        // Real blockchain functions (uncomment when you have smart contract deployed)
-        /*
-        async function addItemToBlockchain(itemData) {
-            // Connect to MetaMask
-            if (!window.ethereum) {
-                throw new Error('MetaMask not found!');
-            }
-            
-            await window.ethereum.request({method: 'eth_requestAccounts'});
-            const provider = new ethers.BrowserProvider(window.ethereum);
-            const signer = await provider.getSigner();
-            
-            // Contract setup
-            const contractAddress = "0xd9145CCE52D386f254917e481eB44e9943F39138";
-            const contractABI = [0xd9145CCE52D386f254917e481eB44e9943F39138]; // Your contract ABI
-            const contract = new ethers.Contract(contractAddress, contractABI, signer);
-            
-            // Add item to blockchain
-            const tx = await contract.addItem(
-                itemData.name,
-                itemData.quantity,
-                ethers.parseEther(itemData.price.toString()),
-                itemData.category,
-                itemData.description
-            );
-            
-            await tx.wait();
-            return tx.hash;
-        }
-        
-        async function loadItemsFromBlockchain() {
-            const contract = new ethers.Contract(contractAddress, contractABI, provider);
-            const itemCount = await contract.itemCount();
-            
-            const items = [];
-            for(let i = 1; i <= itemCount; i++) {
-                const item = await contract.getItem(i);
-                items.push({
-                    id: item.id.toString(),
-                    name: item.name,
-                    quantity: item.quantity.toString(),
-                    price: ethers.formatEther(item.price),
-                    category: item.category,
-                    description: item.description,
-                    timestamp: item.timestamp * 1000
-                });
-            }
-            
-            return items;
-        }
-        */
+        document.getElementById('addItemForm').addEventListener('submit', handleAddItem);
+        document.getElementById('searchItems').addEventListener('input', handleSearch);
     </script>
 </body>
+
 </html>
