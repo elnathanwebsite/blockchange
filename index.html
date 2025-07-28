@@ -344,9 +344,66 @@
     </div>
 
     <script>
-        // ⚠️ GANTI DENGAN API KEY ANDA
+        // ⚠️ GANTI DENGAN SETTING ANDA
         const INFURA_API_KEY = 'https://gas.api.infura.io/v3/a44371e8ff03474aa0540f52b809fdd4';
         const RPC_URL = `https://sepolia.infura.io/v3/${INFURA_API_KEY}`;
+        
+        // ⚠️ GANTI DENGAN CONTRACT ADDRESS DARI REMIX
+        const CONTRACT_ADDRESS = '0xd9145CCE52D386f254917e481eB44e9943F39138';
+        
+        // Contract ABI - Copy dari Remix setelah compile
+        const CONTRACT_ABI = [
+            {
+                "inputs": [
+                    {"internalType": "string", "name": "_name", "type": "string"},
+                    {"internalType": "string", "name": "_category", "type": "string"},
+                    {"internalType": "uint256", "name": "_quantity", "type": "uint256"},
+                    {"internalType": "uint256", "name": "_priceInWei", "type": "uint256"},
+                    {"internalType": "string", "name": "_description", "type": "string"}
+                ],
+                "name": "addItem",
+                "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [{"internalType": "uint256", "name": "_itemId", "type": "uint256"}],
+                "name": "getItem",
+                "outputs": [
+                    {"internalType": "uint256", "name": "id", "type": "uint256"},
+                    {"internalType": "string", "name": "name", "type": "string"},
+                    {"internalType": "string", "name": "category", "type": "string"},
+                    {"internalType": "uint256", "name": "quantity", "type": "uint256"},
+                    {"internalType": "uint256", "name": "priceInWei", "type": "uint256"},
+                    {"internalType": "string", "name": "description", "type": "string"},
+                    {"internalType": "address", "name": "owner", "type": "address"},
+                    {"internalType": "uint256", "name": "timestamp", "type": "uint256"},
+                    {"internalType": "bool", "name": "isActive", "type": "bool"}
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "itemCount",
+                "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getAllActiveItems",
+                "outputs": [
+                    {"internalType": "uint256[]", "name": "ids", "type": "uint256[]"},
+                    {"internalType": "string[]", "name": "names", "type": "string[]"},
+                    {"internalType": "string[]", "name": "categories", "type": "string[]"},
+                    {"internalType": "uint256[]", "name": "quantities", "type": "uint256[]"},
+                    {"internalType": "uint256[]", "name": "prices", "type": "uint256[]"}
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
         
         // Bisa juga pakai public RPC (tanpa API key)
         // const RPC_URL = 'https://rpc.ankr.com/eth_sepolia';
@@ -414,12 +471,55 @@
             }
         }
         
-        // Load items from "blockchain" (simulated)
-        function loadItems() {
-            items = [...blockchainItems];
-            itemCounter = Math.max(...items.map(item => item.id), 0);
-            displayItems();
-            updateTotalItems();
+        // Load items from real blockchain
+        async function loadItems() {
+            try {
+                if (!CONTRACT_ADDRESS || CONTRACT_ADDRESS === '0xd9145CCE52D386f254917e481eB44e9943F39138') {
+                    // Fallback to simulation if contract not deployed yet
+                    items = [...blockchainItems];
+                    itemCounter = Math.max(...items.map(item => item.id), 0);
+                    displayItems();
+                    updateTotalItems();
+                    return;
+                }
+                
+                const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+                const itemCount = await contract.itemCount();
+                
+                items = [];
+                for(let i = 1; i <= itemCount; i++) {
+                    try {
+                        const item = await contract.getItem(i);
+                        if (item.isActive) {
+                            items.push({
+                                id: item.id.toString(),
+                                name: item.name,
+                                category: item.category,
+                                quantity: item.quantity.toString(),
+                                price: ethers.formatEther(item.priceInWei),
+                                description: item.description,
+                                timestamp: Number(item.timestamp) * 1000,
+                                owner: item.owner,
+                                txHash: `Block: ${await provider.getBlockNumber()}`
+                            });
+                        }
+                    } catch (error) {
+                        console.log(`Error loading item ${i}:`, error);
+                    }
+                }
+                
+                displayItems();
+                updateTotalItems();
+                
+            } catch (error) {
+                console.error('Error loading items from blockchain:', error);
+                showMessage('Failed to load items from blockchain', 'error');
+                
+                // Fallback to simulation
+                items = [...blockchainItems];
+                displayItems();
+                updateTotalItems();
+            }
         }
         
         // Display items in UI
@@ -464,7 +564,7 @@
             `).join('');
         }
         
-        // Add new item
+        // Add item to real blockchain
         async function addItem(event) {
             event.preventDefault();
             
@@ -481,13 +581,20 @@
                     description: document.getElementById('itemDescription').value
                 };
                 
-                // Simulate blockchain transaction
-                await simulateBlockchainTransaction(formData);
+                // Try real blockchain first
+                if (CONTRACT_ADDRESS && CONTRACT_ADDRESS !== '0xd9145CCE52D386f254917e481eB44e9943F39138') {
+                    await addItemToBlockchain(formData);
+                } else {
+                    // Fallback to simulation
+                    await simulateBlockchainTransaction(formData);
+                }
                 
                 // Clear form
                 document.getElementById('addItemForm').reset();
-                
                 showMessage('Item successfully added to blockchain!', 'success');
+                
+                // Reload items
+                setTimeout(() => loadItems(), 2000);
                 
             } catch (error) {
                 console.error('Error adding item:', error);
@@ -496,6 +603,42 @@
                 addBtn.disabled = false;
                 addBtn.textContent = 'Add Item to Blockchain';
             }
+        }
+        
+        // Real blockchain function
+        async function addItemToBlockchain(itemData) {
+            // Check if MetaMask is available
+            if (!window.ethereum) {
+                throw new Error('MetaMask not found! Please install MetaMask.');
+            }
+            
+            // Request account access
+            await window.ethereum.request({method: 'eth_requestAccounts'});
+            
+            // Create provider and signer
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
+            
+            // Create contract instance with signer
+            const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+            
+            // Convert price to Wei
+            const priceInWei = ethers.parseEther(itemData.price.toString());
+            
+            // Call smart contract
+            const tx = await contract.addItem(
+                itemData.name,
+                itemData.category,
+                itemData.quantity,
+                priceInWei,
+                itemData.description
+            );
+            
+            // Wait for transaction confirmation
+            const receipt = await tx.wait();
+            
+            console.log('Transaction confirmed:', receipt.hash);
+            return receipt.hash;
         }
         
         // Simulate blockchain transaction (replace with real smart contract call)
@@ -582,8 +725,8 @@
             const signer = await provider.getSigner();
             
             // Contract setup
-            const contractAddress = "YOUR_CONTRACT_ADDRESS";
-            const contractABI = [...]; // Your contract ABI
+            const contractAddress = "0xd9145CCE52D386f254917e481eB44e9943F39138";
+            const contractABI = [0xd9145CCE52D386f254917e481eB44e9943F39138]; // Your contract ABI
             const contract = new ethers.Contract(contractAddress, contractABI, signer);
             
             // Add item to blockchain
