@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,44 +6,257 @@
     <title>Blockchain Inventory Management</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.1/ethers.umd.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); overflow: hidden; }
-        .header { background: linear-gradient(135deg, #2196F3, #21CBF3); color: white; padding: 30px; text-align: center; }
-        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        .status { padding: 20px; background: #f8f9fa; border-bottom: 1px solid #dee2e6; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-        .status-item { display: inline-block; padding: 10px 15px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
-        .main-content { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; padding: 30px; }
-        .form-section { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); height: fit-content; }
-        .form-section h2 { color: #333; margin-bottom: 20px; font-size: 1.5rem; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: #555; font-weight: 500; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 15px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; transition: border-color 0.3s; }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #2196F3; }
-        .btn { background: linear-gradient(135deg, #2196F3, #21CBF3); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 16px; font-weight: 500; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; width: 100%; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(33, 150, 243, 0.3); }
-        .btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
-        .items-section { background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); overflow: hidden; }
-        .items-header { background: #f8f9fa; padding: 20px 30px; border-bottom: 1px solid #dee2e6; }
-        .items-header h2 { color: #333; font-size: 1.5rem; }
-        .search-box { margin-top: 15px; position: relative; }
-        .search-box input { width: 100%; padding: 12px 15px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 16px; }
-        .items-list { max-height: 600px; overflow-y: auto; padding: 20px; }
-        .item-card { background: #fdfdff; border-radius: 12px; padding: 20px; margin-bottom: 15px; transition: transform 0.2s, box-shadow 0.2s; border-left: 4px solid #2196F3; }
-        .item-card:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-        .item-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; }
-        .item-name { font-size: 1.2rem; font-weight: 600; color: #333; }
-        .item-id { background: #2196F3; color: white; padding: 4px 8px; border-radius: 5px; font-size: 0.8rem; font-weight: 500; }
-        .item-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin-top: 15px; }
-        .item-detail { text-align: center; padding: 10px; background: white; border-radius: 8px; border: 1px solid #e9ecef; }
-        .item-detail-label { font-size: 0.8rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
-        .item-detail-value { font-size: 1.1rem; font-weight: 600; color: #333; margin-top: 5px; word-wrap: break-word; }
-        .loading, .no-items { text-align: center; padding: 40px; color: #666; font-size: 1.1rem; }
-        #messages div { padding: 15px; border-radius: 10px; margin-bottom: 20px; color: white; }
-        .error { background: #ff5722; }
-        .success { background: #4caf50; }
-        @media (max-width: 992px) { .main-content { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .header h1 { font-size: 2rem; } .status { flex-direction: column; align-items: stretch; } .status-item { margin: 5px 0; text-align: center; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2196F3, #21CBF3);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .status {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .status-item {
+            display: inline-block;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #2196F3, #21CBF3);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(33, 150, 243, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .items-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .items-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .items-header h2 {
+            color: #333;
+            font-size: 1.5rem;
+        }
+        
+        .search-box {
+            margin-top: 15px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        .items-list {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .item-card {
+            background: #fdfdff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+        
+        .item-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .item-id {
+            background: #2196F3;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .item-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .item-detail {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .item-detail-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .item-detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-top: 5px;
+            word-wrap: break-word;
+        }
+        
+        .loading, .no-items {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        #messages div {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .error {
+            background: #ff5722;
+        }
+        
+        .success {
+            background: #4caf50;
+        }
     </style>
 </head>
 <body>
@@ -126,125 +338,447 @@
     </div>
 
     <script>
-        // =================================================================
-        //                 KONFIGURASI APLIKASI
-        // =================================================================
-        
-        const INFURA_API_KEY = 'a44371e8ff03474aa0540f52b809fdd4';
-        const CONTRACT_ADDRESS = '0xff02bb72a821c1b37f3eb3e1ffa0ac80f6e6aae5';
-        
+    // =================================================================
+        //                 KONFIGURASI APLIKASI (YANG HARUS DIUBAH)
         // =================================================================
         
+        // CATATAN: Ganti dengan Infura API Key Anda sendiri
+        const INFURA_API_KEY = 'a44371e8ff03474aa0540f52b809fdd4'; // <-- Ini contoh, ganti dengan key Anda
+        
+        // CATATAN: Ganti dengan alamat kontrak Anda yang sudah di-deploy
+        const CONTRACT_ADDRESS = '0xff02bb72a821c1b37f3eb3e1ffa0ac80f6e6aae5'; // <-- Ganti dengan alamat kontrak Anda
+        
+        // =================================================================
+        
+        // URL RPC untuk jaringan Sepolia (tidak perlu diubah)
         const RPC_URL = `https://sepolia.infura.io/v3/${INFURA_API_KEY}`;
         
+        // ABI Kontrak (pastikan sesuai dengan kontrak Anda)
         const CONTRACT_ABI = [
+	{
+		"inputs": [
 			{
-				"inputs": [
-					{ "internalType": "string", "name": "_name", "type": "string" },
-					{ "internalType": "string", "name": "_category", "type": "string" },
-					{ "internalType": "uint256", "name": "_quantity", "type": "uint256" },
-					{ "internalType": "uint256", "name": "_priceInWei", "type": "uint256" },
-					{ "internalType": "string", "name": "_description", "type": "string" }
-				],
-				"name": "addItem", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "nonpayable", "type": "function"
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
 			},
 			{
-				"inputs": [{ "internalType": "uint256", "name": "_itemId", "type": "uint256" }],
-				"name": "deactivateItem", "outputs": [], "stateMutability": "nonpayable", "type": "function"
+				"internalType": "string",
+				"name": "_category",
+				"type": "string"
 			},
 			{
-				"anonymous": false, "inputs": [
-					{ "indexed": true, "internalType": "uint256", "name": "itemId", "type": "uint256" },
-					{ "indexed": false, "internalType": "string", "name": "name", "type": "string" },
-					{ "indexed": false, "internalType": "string", "name": "category", "type": "string" },
-					{ "indexed": false, "internalType": "uint256", "name": "quantity", "type": "uint256" },
-					{ "indexed": false, "internalType": "uint256", "name": "price", "type": "uint256" },
-					{ "indexed": true, "internalType": "address", "name": "owner", "type": "address" }
-				], "name": "ItemAdded", "type": "event"
+				"internalType": "uint256",
+				"name": "_quantity",
+				"type": "uint256"
 			},
 			{
-				"anonymous": false, "inputs": [{ "indexed": true, "internalType": "uint256", "name": "itemId", "type": "uint256" }],
-				"name": "ItemDeactivated", "type": "event"
+				"internalType": "uint256",
+				"name": "_priceInWei",
+				"type": "uint256"
 			},
 			{
-				"anonymous": false, "inputs": [
-					{ "indexed": true, "internalType": "uint256", "name": "itemId", "type": "uint256" },
-					{ "indexed": false, "internalType": "uint256", "name": "newQuantity", "type": "uint256" },
-					{ "indexed": false, "internalType": "uint256", "name": "newPrice", "type": "uint256" }
-				], "name": "ItemUpdated", "type": "event"
-			},
-			{
-				"inputs": [
-					{ "internalType": "uint256", "name": "_itemId", "type": "uint256" },
-					{ "internalType": "uint256", "name": "_newQuantity", "type": "uint256" },
-					{ "internalType": "uint256", "name": "_newPrice", "type": "uint256" }
-				],
-				"name": "updateItem", "outputs": [], "stateMutability": "nonpayable", "type": "function"
-			},
-			{
-				"inputs": [], "name": "getAllActiveItems", "outputs": [
-					{ "internalType": "uint256[]", "name": "ids", "type": "uint256[]" },
-					{ "internalType": "string[]", "name": "names", "type": "string[]" },
-					{ "internalType": "string[]", "name": "categories", "type": "string[]" },
-					{ "internalType": "uint256[]", "name": "quantities", "type": "uint256[]" },
-					{ "internalType": "uint256[]", "name": "prices", "type": "uint256[]" }
-				], "stateMutability": "view", "type": "function"
-			},
-			{
-				"inputs": [{ "internalType": "uint256", "name": "_itemId", "type": "uint256" }], "name": "getItem", "outputs": [
-					{ "internalType": "uint256", "name": "id", "type": "uint256" },
-					{ "internalType": "string", "name": "name", "type": "string" },
-					{ "internalType": "string", "name": "category", "type": "string" },
-					{ "internalType": "uint256", "name": "quantity", "type": "uint256" },
-					{ "internalType": "uint256", "name": "priceInWei", "type": "uint256" },
-					{ "internalType": "string", "name": "description", "type": "string" },
-					{ "internalType": "address", "name": "owner", "type": "address" },
-					{ "internalType": "uint256", "name": "timestamp", "type": "uint256" },
-					{ "internalType": "bool", "name": "isActive", "type": "bool" }
-				], "stateMutability": "view", "type": "function"
-			},
-			{
-				"inputs": [{ "internalType": "address", "name": "_owner", "type": "address" }], "name": "getItemsByOwner",
-				"outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }], "stateMutability": "view", "type": "function"
-			},
-			{
-				"inputs": [], "name": "getStats", "outputs": [
-					{ "internalType": "uint256", "name": "totalItems", "type": "uint256" },
-					{ "internalType": "uint256", "name": "activeItems", "type": "uint256" },
-					{ "internalType": "uint256", "name": "totalValue", "type": "uint256" },
-					{ "internalType": "address", "name": "contractOwner", "type": "address" }
-				], "stateMutability": "view", "type": "function"
-			},
-			{
-				"inputs": [], "name": "getTotalInventoryValue",
-				"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function"
-			},
-			{
-				"inputs": [], "name": "itemCount",
-				"outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function"
-			},
-			{
-				"inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "items", "outputs": [
-					{ "internalType": "uint256", "name": "id", "type": "uint256" },
-					{ "internalType": "string", "name": "name", "type": "string" },
-					{ "internalType": "string", "name": "category", "type": "string" },
-					{ "internalType": "uint256", "name": "quantity", "type": "uint256" },
-					{ "internalType": "uint256", "name": "priceInWei", "type": "uint256" },
-					{ "internalType": "string", "name": "description", "type": "string" },
-					{ "internalType": "address", "name": "owner", "type": "address" },
-					{ "internalType": "uint256", "name": "timestamp", "type": "uint256" },
-					{ "internalType": "bool", "name": "isActive", "type": "bool" }
-				], "stateMutability": "view", "type": "function"
-			},
-			{
-				"inputs": [{ "internalType": "address", "name": "", "type": "address" }, { "internalType": "uint256", "name": "", "type": "uint256" }],
-				"name": "ownerItems", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function"
-			},
-			{
-				"inputs": [{ "internalType": "string", "name": "_searchTerm", "type": "string" }], "name": "searchItemsByName",
-				"outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }], "stateMutability": "view", "type": "function"
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
 			}
-		];
+		],
+		"name": "addItem",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "deactivateItem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "itemId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "category",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "ItemAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "ItemDeactivated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "itemId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newQuantity",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "newPrice",
+				"type": "uint256"
+			}
+		],
+		"name": "ItemUpdated",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_newQuantity",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_newPrice",
+				"type": "uint256"
+			}
+		],
+		"name": "updateItem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAllActiveItems",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "ids",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "names",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "categories",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "quantities",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "prices",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "getItem",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "category",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "priceInWei",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "isActive",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
+			}
+		],
+		"name": "getItemsByOwner",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getStats",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "totalItems",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "activeItems",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalValue",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "contractOwner",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getTotalInventoryValue",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "itemCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "items",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "category",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "quantity",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "priceInWei",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "isActive",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "ownerItems",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_searchTerm",
+				"type": "string"
+			}
+		],
+		"name": "searchItemsByName",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
         
         let provider;
         let contract;
@@ -252,19 +786,36 @@
         
         async function initApp() {
             try {
-                if (INFURA_API_KEY === 'https://gas.api.infura.io/v3/a44371e8ff03474aa0540f52b809fdd4' || !INFURA_API_KEY) {
+                // Validasi konfigurasi
+                if (!INFURA_API_KEY || INFURA_API_KEY.includes('example')) {
                     showMessage('Please configure your Infura API Key in the script.', 'error');
                     document.getElementById('network').textContent = 'Config Error';
                     return;
                 }
+                
+                if (!CONTRACT_ADDRESS || CONTRACT_ADDRESS === '0x0') {
+                    showMessage('Please configure your smart contract address in the code.', 'error');
+                    document.getElementById('network').textContent = 'Config Error';
+                    return;
+                }
+
+                // Inisialisasi provider
                 provider = new ethers.JsonRpcProvider(RPC_URL);
                 const network = await provider.getNetwork();
                 document.getElementById('network').textContent = network.name;
                 
+                // Listen for new blocks
                 provider.on('block', (blockNumber) => {
                     document.getElementById('blockNumber').textContent = blockNumber;
                 });
 
+                // Inisialisasi kontrak
+                contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+                
+                // Setup event listeners
+                setupEventListeners();
+                
+                // Load initial items
                 loadItems();
             } catch (error) {
                 console.error('Initialization failed:', error);
@@ -273,19 +824,38 @@
             }
         }
         
+        function setupEventListeners() {
+            // Listen for new items
+            contract.on("ItemAdded", (itemId, name, category, quantity, price, owner) => {
+                console.log(`New item added: ${name} (ID: ${itemId})`);
+                showMessage(`New item added: ${name}`, 'success');
+                loadItems();
+            });
+
+            // Listen for item updates
+            contract.on("ItemUpdated", (itemId, newQuantity, newPrice) => {
+                console.log(`Item updated: ID ${itemId}`);
+                loadItems();
+            });
+
+            // Listen for item deactivations
+            contract.on("ItemDeactivated", (itemId) => {
+                console.log(`Item deactivated: ID ${itemId}`);
+                loadItems();
+            });
+        }
+        
         async function loadItems() {
             const itemsListEl = document.getElementById('itemsList');
             itemsListEl.innerHTML = '<div class="loading">🔄 Loading items from blockchain...</div>';
 
             try {
-                 if (!CONTRACT_ADDRESS || CONTRACT_ADDRESS === '0xff02bb72a821c1b37f3eb3e1ffa0ac80f6e6aae5') {
-                    throw new Error('Please configure your smart contract address in the code.');
-                }
-                contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+                // Get all active items from the contract
                 const allItemsData = await contract.getAllActiveItems();
                 
                 const [ids, names, categories, quantities, prices] = allItemsData;
                 
+                // Process items data
                 items = [];
                 for (let i = 0; i < ids.length; i++) {
                     items.push({
@@ -297,6 +867,7 @@
                     });
                 }
                 
+                // Display items
                 displayItems();
                 updateTotalItems();
             } catch (error) {
@@ -351,20 +922,24 @@
             addBtn.textContent = 'Connecting to Wallet...';
 
             try {
+                // Connect to MetaMask
                 const browserProvider = new ethers.BrowserProvider(window.ethereum);
                 const signer = await browserProvider.getSigner();
                 const contractWithSigner = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
+                // Get form values
                 const itemName = document.getElementById('itemName').value;
                 const itemCategory = document.getElementById('itemCategory').value;
                 const itemQuantity = document.getElementById('itemQuantity').value;
                 const itemPrice = document.getElementById('itemPrice').value;
                 const itemDescription = document.getElementById('itemDescription').value;
 
+                // Convert price to wei
                 const priceInWei = ethers.parseEther(itemPrice);
 
                 addBtn.textContent = 'Confirm in Wallet...';
 
+                // Send transaction
                 const tx = await contractWithSigner.addItem(
                     itemName, itemCategory, itemQuantity, priceInWei, itemDescription
                 );
@@ -372,11 +947,16 @@
                 addBtn.textContent = 'Processing Transaction...';
                 showMessage('Transaction sent! Waiting for confirmation...', 'success');
                 
-                await tx.wait();
+                // Wait for transaction confirmation
+                const receipt = await tx.wait();
                 
-                showMessage('Item successfully added to the blockchain!', 'success');
-                document.getElementById('addItemForm').reset();
-                loadItems();
+                // Check transaction status
+                if (receipt.status === 1) {
+                    showMessage('Item successfully added to the blockchain!', 'success');
+                    document.getElementById('addItemForm').reset();
+                } else {
+                    showMessage('Transaction failed', 'error');
+                }
             } catch (error) {
                 console.error('Error adding item:', error);
                 showMessage(error.reason || error.message, 'error');
@@ -407,6 +987,7 @@
             displayItems(filtered);
         }
         
+        // Initialize the app when DOM is loaded
         document.addEventListener('DOMContentLoaded', initApp);
         document.getElementById('addItemForm').addEventListener('submit', handleAddItem);
         document.getElementById('searchItems').addEventListener('input', handleSearch);
