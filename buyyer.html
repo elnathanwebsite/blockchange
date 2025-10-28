@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Suku Cadang Statis (Web3 Pay)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.1/ethers.umd.min.js" type="application/javascript"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #2196F3, #21CBF3); color: white; padding: 30px; text-align: center; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .status { padding: 20px; background: #f8f9fa; border-bottom: 1px solid #dee2e6; text-align: center; }
+        .status-item { display: inline-block; padding: 10px 15px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); margin: 5px; }
+        .main-content { padding: 30px; }
+        .items-section { background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08); overflow: hidden; }
+        .items-header { background: #f8f9fa; padding: 20px; border-bottom: 1px solid #dee2e6; }
+        .items-list { max-height: 800px; overflow-y: auto; padding: 20px; }
+        .item-card { background: #fdfdff; border-radius: 12px; padding: 20px; margin-bottom: 15px; border-left: 4px solid #2196F3; }
+        .item-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; }
+        .item-name { font-size: 1.2rem; font-weight: 600; color: #333; }
+        .item-id { background: #2196F3; color: white; padding: 4px 8px; border-radius: 5px; font-size: 0.8rem; }
+        .item-price { font-size: 1.3rem; font-weight: 700; color: #4CAF50; margin-bottom: 15px; }
+        .item-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; }
+        .item-detail { padding: 10px; background: white; border-radius: 8px; border: 1px solid #e9ecef; }
+        .item-detail-label { font-size: 0.8rem; color: #666; text-transform: uppercase; }
+        .item-detail-value { font-size: 1rem; font-weight: 600; color: #333; margin-top: 5px; word-wrap: break-word; }
+        .buy-btn { background: #4CAF50; width: 100%; margin-top: 15px; }
+        .buy-btn:hover { background: #45a049; box-shadow: 0 5px 20px rgba(76, 175, 80, 0.3); }
+        .btn { background: linear-gradient(135deg, #2196F3, #21CBF3); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 16px; font-weight: 500; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; width: 100%; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(33, 150, 243, 0.3); }
+        #messages div { padding: 15px; border-radius: 10px; color: white; margin-top: 15px; }
+        .error { background: #ff5722; }
+        .success { background: #4caf50; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Toko Suku Cadang Statis</h1>
+            <p>Beli Suku Cadang Menggunakan Crypto (Sepolia Testnet)</p>
+        </div>
+                
+        <div class="status">
+            <button class="btn" id="connectButton" style="width: auto; padding: 10px 20px;">Connect MetaMask</button>
+            <div class="status-item">
+                <strong>Status:</strong> <span id="statusMessage">Not Connected</span>
+            </div>
+            <div class="status-item">
+                <strong>Alamat Anda:</strong> <span id="walletAddress">-</span>
+            </div>
+            <div id="messages"></div>
+        </div>
+                
+        <div class="main-content">
+            <div class="items-section">
+                <div class="items-header">
+                    <h2>📋 Daftar Suku Cadang</h2>
+                </div>
+                <div class="items-list" id="itemsList">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =================================================================
+        //                 KONFIGURASI (WAJIB DIUBAH)
+        // =================================================================
+        // 1. Ganti dengan Alamat Wallet ANDA (Penjual)
+        // Ini adalah dompet yang akan MENERIMA pembayaran
+        const SELLER_WALLET_ADDRESS = "0x...AlamatDompetAnda..."; 
+        
+        // =================================================================
+        //            DATABASE JSON STATIS (Bisa Anda Tambah/Ubah)
+        // =================================================================
+        const PRODUCT_CATALOG_JSON = [
+            {
+                "id": 101,
+                "nama": "Kampas Rem Depan",
+                "harga": "0.005", // Harga dalam ETH (pakai string)
+                "stock": 100, // Ini hanya untuk tampilan, tidak akan berkurang
+                "berat": "250 gr",
+                "satuan": "set",
+                "noSeri": "KRM-HON-001",
+                "warna": "Hitam",
+                "merk": "Honda Genuine",
+                "ketebalan": "8 mm",
+                "pembuat": "PT HGP",
+                "codeBody": "K59J"
+            },
+            {
+                "id": 102,
+                "nama": "Filter Oli",
+                "harga": "0.002",
+                "stock": 150,
+                "berat": "100 gr",
+                "satuan": "pcs",
+                "noSeri": "FLO-YAM-002",
+                "warna": "Kuning",
+                "merk": "Yamaha Genuine",
+                "ketebalan": "N/A",
+                "pembuat": "PT YGP",
+                "codeBody": "NMAX"
+            },
+            {
+                "id": 103,
+                "nama": "Busi Iridium",
+                "harga": "0.004",
+                "stock": 50,
+                "berat": "50 gr",
+                "satuan": "pcs",
+                "noSeri": "BUS-NGK-003",
+                "warna": "Silver",
+                "merk": "NGK",
+                "ketebalan": "N/A",
+                "pembuat": "NGK Spark Plugs",
+                "codeBody": "ALL"
+            }
+            // Tambahkan produk lain di sini...
+        ];
+        // =================================================================
+
+        let provider;
+        let signer;
+
+        // Ambil elemen HTML
+        const connectButton = document.getElementById('connectButton');
+        const statusMessage = document.getElementById('statusMessage');
+        const walletAddress = document.getElementById('walletAddress');
+        const itemsList = document.getElementById('itemsList');
+
+        // Fungsi inisialisasi
+        async function init() {
+            if (typeof window.ethereum === 'undefined') {
+                statusMessage.textContent = "Error: MetaMask not installed!";
+                return;
+            }
+            provider = new ethers.BrowserProvider(window.ethereum);
+            loadProducts();
+        }
+
+        // Fungsi menghubungkan ke MetaMask
+        async function connectWallet() {
+            try {
+                // Minta signer (memicu pop-up MetaMask)
+                signer = await provider.getSigner();
+                const address = await signer.getAddress();
+                
+                walletAddress.textContent = `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+                statusMessage.textContent = "Connected (Sepolia)";
+                connectButton.textContent = "Connected";
+                
+            } catch (error) {
+                console.error("Error connecting wallet:", error);
+                statusMessage.textContent = "Connection failed.";
+            }
+        }
+
+        // Fungsi memuat semua produk DARI JSON
+        function loadProducts() {
+            itemsList.innerHTML = ''; // Kosongkan list
+            
+            if (PRODUCT_CATALOG_JSON.length === 0) {
+                itemsList.innerHTML = '<div class="no-items">📭 Belum ada produk.</div>';
+                return;
+            }
+            
+            PRODUCT_CATALOG_JSON.forEach(part => {
+                const priceInEth = part.harga;
+                
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-name">${part.nama} (Stok: ${part.stock})</div>
+                        <div class="item-id">ID: ${part.id}</div>
+                    </div>
+                    <div class="item-price">${priceInEth} ETH</div>
+                    <div class="item-details">
+                        <div class="item-detail"><div class="item-detail-label">Merk</div><div class="item-detail-value">${part.merk}</div></div>
+                        <div class="item-detail"><div class="item-detail-label">No. Seri</div><div class="item-detail-value">${part.noSeri}</div></div>
+                        <div class="item-detail"><div class="item-detail-label">Berat</div><div class="item-detail-value">${part.berat}</div></div>
+                        <div class="item-detail"><div class="item-detail-label">Warna</div><div class="item-detail-value">${part.warna}</div></div>
+                        <div class="item-detail"><div class="item-detail-label">Pembuat</div><div class="item-detail-value">${part.pembuat}</div></div>
+                    </div>
+                    <button class="btn buy-btn" 
+                        data-id="${part.id}" 
+                        data-price-eth="${priceInEth}">
+                        Beli Sekarang (${priceInEth} ETH)
+                    </button>
+                `;
+                itemsList.appendChild(card);
+            });
+        }
+
+        // Fungsi menangani pembelian
+        async function handleBuyItem(e) {
+            // Cek apakah yang diklik adalah tombol .buy-btn
+            if (!e.target.classList.contains('buy-btn')) return;
+            
+            // 1. Cek apakah wallet sudah terhubung
+            if (!signer) {
+                showMessage("Harap hubungkan wallet Anda (sebagai Buyer)!", 'error');
+                return;
+            }
+            // Cek apakah alamat seller sudah diisi
+            if (SELLER_WALLET_ADDRESS === "0x...AlamatDompetAnda..." || !SELLER_WALLET_ADDRESS) {
+                 showMessage("Website ini belum dikonfigurasi! Alamat seller tidak valid.", 'error');
+                 return;
+            }
+
+            const button = e.target;
+            const partId = button.getAttribute('data-id');
+            const priceEth = button.getAttribute('data-price-eth');
+
+            button.disabled = true;
+            button.textContent = 'Buka MetaMask...';
+            showMessage('Silakan konfirmasi transaksi di MetaMask...', 'success');
+
+            try {
+                // 2. Konversi harga ETH ke Wei
+                const priceInWei = ethers.parseEther(priceEth);
+
+                // 3. Buat transaksi sederhana (Wallet-to-Wallet Transfer)
+                const tx = await signer.sendTransaction({
+                    to: SELLER_WALLET_ADDRESS, // Kirim ke dompet penjual
+                    value: priceInWei          // Sejumlah harga produk
+                });
+
+                // 4. Tunggu transaksi selesai
+                button.textContent = 'Memproses Transaksi...';
+                await tx.wait();
+
+                showMessage(`Pembelian produk ID ${partId} berhasil! Hash: ${tx.hash}`, 'success');
+                
+            } catch (error) {
+                console.error("Error buying product:", error);
+                showMessage(error.reason || "Pembelian gagal.", 'error');
+            } finally {
+                button.disabled = false;
+                button.textContent = `Beli Sekarang (${priceEth} ETH)`;
+            }
+        }
+
+        // Menampilkan pesan notifikasi
+        function showMessage(message, type) {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = `<div class="${type}">${message}</div>`;
+            setTimeout(() => { messagesDiv.innerHTML = ''; }, 5000);
+        }
+
+        // Event Listeners Utama
+        connectButton.addEventListener('click', connectWallet);
+        itemsList.addEventListener('click', handleBuyItem);
+
+        // Mulai aplikasi
+        init();
+    </script>
+</body>
+</html>
